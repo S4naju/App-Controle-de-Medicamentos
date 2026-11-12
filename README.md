@@ -41,7 +41,7 @@ Esta aplicação atua como a central de controle e monitoramento do sistema de d
 * **Versionamento & Gestão:** Git, GitHub, GitHub Projects / Issues
 ---
 
-##Estrutura do Repositório
+##Estrutura do Repositório##
 
 ```text
 ├── docs/ # Documentação técnica e demais documentos do projeto
