@@ -27,7 +27,7 @@ Esta aplicação atua como a central de controle e monitoramento do sistema de d
 ##Integrantes da Equipe
 
 * **Ana Julia Sampaio**
-* **Maycon Júnior Moraes ** 
+* **Maycon Júnior Moraes** 
 * **Raimundo Guilherme Alves**
 
 ---
