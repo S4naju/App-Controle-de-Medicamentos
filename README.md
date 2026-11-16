@@ -1,53 +1,105 @@
-Care Sync - App de Controle e Monitoramento de Medicação 
+# Care Sync - Sistema de Controle e Monitoramento de Medicação
 
->Interface web/mobile para controle, agendamento e segurança na administração de medicamentos integrados ao dispensador inteligente.
-
----
-
-##Objetivo da Solução
-
-O uso indevido ou o esquecimento de medicamentos representa um risco elevado à saúde, sobretudo para idosos ou pessoas com limitações motoras e cognitivas em ambientes domésticos, asilos e hospitais. 
-
-Esta aplicação atua como a central de controle e monitoramento do sistema de dispensação de remédios. Ela permite que cuidadores, familiares ou profissionais de saúde configurem rotinas de dosagem, acompanhem a adesão do paciente em tempo real, monitorem o tempo de armazenamento dos fármacos fora da embalagem e recebam alertas críticos de segurança com suporte a chamadas de emergência.
+> Aplicação web/mobile (PWA) integrada a um dispensador inteligente (IoT) para gerenciamento de horários, monitoramento de validade e segurança na administração diária de medicamentos.
 
 ---
 
-##Principais Funcionalidades do App
-
-* **Agendamento e Monitoramento de Doses:** Cadastro de horários, dosagens e instruções específicas para cada medicamento.
-* **Comunicação com o Hardware:** Envio de comandos para acionamento remoto e sincronização de horários com os compartimentos mecânicos.
-* **Validação por Identificação (RFID/Pulseira):** Confirmação de consumo vinculada ao registro de leitura da pulseira de identificação do paciente.
-* **Controle de Validade no Compartimento (Limite de 7 Dias):** Rastreamento do tempo de permanência de cada dose fora da embalagem original, alertando caso atinja o limite máximo recomendado para preservar a integridade química do fármaco.
-* **Sistema Escalonado de Alertas:**
-  * Notificação imediata ao cuidador em caso de não consumo no horário estipulado.
-  * Acionamento direto de **Ligação de Emergência** caso o responsável não consiga contato com o paciente.
+### Sobre o projeto:
+Este projeto foi desenvolvido de forma integrada para as disciplinas de *Engenharia de Software* e *Banco de Dados II* no *IFRJ - Campus Niterói*, com o objetivo de aplicar na prática os conceitos de arquitetura de software, modelagem avançada, persistência, integridade referencial, versionamento e integração entre uma aplicação web/mobile e um dispositivo físico (IoT).
 
 ---
 
-##Integrantes da Equipe
+### Objetivo da solução proposta:
+Fatores como acidentes e limitações decorrentes da idade podem elevar o risco do uso indevido, esquecimento ou duplicação de doses de medicamentos. O objetivo do *Care Sync* é facilitar a rotina de pessoas que administram medicações diárias — em ambientes domésticos, asilos ou hospitais — garantindo maior segurança e autonomia aos pacientes e tranquilidade aos cuidadores.
 
-* **Ana Julia Sampaio**
-* **Maycon Júnior Moraes** 
-* **Raimundo Guilherme Alves**
+A solução permite armazenar os remédios fora de suas embalagens originais sem comprometer sua integridade, controlando o tempo de permanência no dispensador (limite máximo de 7 dias). O aplicativo realiza o agendamento das doses, sincroniza a liberação de compartimentos mecânicos automatizados (ESP32), valida a retirada e o consumo por meio de um sensor de peso no recipiente de dispensação e de um sensor de detecção da ação do paciente (obs.: arquitetura de sensores sujeita a alterações conforme os testes de hardware), e dispara alertas instantâneos aos responsáveis em caso de não consumo, disponibilizando uma opção de ligação de emergência.
 
 ---
 
-##Tecnologias Previstas
+### Estrutura do sistema (Visão Geral do Banco de Dados):
 
-* **Linguagens e Estruturação:** JavaScript, JSX, CSS3, HTML5
-* **Interface:** Estrutura baseada em componentes reutilizáveis (biblioteca/framework frontend em definição pela equipe)
-* **Backend & Banco de Dados (BaaS):** Supabase (PostgreSQL, Autenticação e APIs em tempo real)
-* **Comunicação com Hardware / IoT:** Integração via REST APIs / WebSockets
-* **Versionamento & Gestão:** Git, GitHub, GitHub Projects / Issues
+O banco de dados relacional está sendo estruturado no *PostgreSQL* (hospedado no *Supabase) e contempla as seguintes entidades principais *(obs.: modelagem inicial sujeita a ajustes durante a evolução do projeto):
+
+- *Usuário e Paciente:* Cadastro dos cuidadores responsáveis e dos pacientes assistidos.
+- *Dispositivo, Compartimento e Vínculo:* Gerenciamento dos dispensadores físicos (ESP32), status de conexão, compartimentos individuais e associação com os pacientes.
+- *Medicamento e Abastecimento:* Controle dos remédios cadastrados, estoque atual em cada compartimento e monitoramento da data limite de armazenamento (7 dias).
+- *Tratamento e Dispensação:* Regras de intervalo entre doses, tolerância de retirada, agendamentos e auditoria de cada liberação confirmada pelos sensores.
+- *Alerta:* Registro e disparo de notificações referentes a atrasos de retirada, estoque baixo, prazo de armazenamento ou falhas no dispositivo.
+
 ---
 
-##Estrutura do Repositório##
+### Funcionalidades:
 
-```text
-├── docs/ # Documentação técnica e demais documentos do projeto
-├── modelos/ # Diagramas e modelos de arquitetura, classes e banco de dados
-├── src/ # Códigos-fonte da aplicação
-├── database/ # Scripts relacionados ao banco de dados
-├── tests/ # Códigos e artefatos relacionados aos testes
-├── .gitignore # Arquivos e diretórios ignorados pelo Git
-└── README.md # Informações gerais e guia do projeto
+O sistema permite o gerenciamento completo do ecossistema de medicação, contemplando:
+
+- Cadastrar, editar e excluir usuários, pacientes, medicamentos e tratamentos com intervalos de dosagem
+- Vincular cuidadores aos dispositivos físicos e monitorar em tempo real o status de conexão do hardware e o estoque dos compartimentos
+- Controlar o tempo de permanência dos medicamentos fora da embalagem original (alerta preventivo antes de ultrapassar 7 dias)
+- Validar a permanência e a retirada do medicamento por meio de sensor de peso no recipiente de queda e sensor de detecção de aproximação/ação do paciente (obs.: sujeito a alterações durante a fase de prototipagem)
+- Disparar notificações automáticas de confirmação de retirada ou alertas críticos de atraso aos cuidadores, além de disponibilizar acionamento de ligação de emergência
+- Consultar o histórico de adesão, alertas e dispensações realizadas
+
+---
+
+### Principais tecnologias previstas:
+
+*Front-end (Aplicação Web/Mobile - PWA):*
+- React
+- JSX
+- HTML5 e CSS3
+- JavaScript
+
+*Back-end, Banco de Dados e Integração IoT:*
+- C# / .NET Core (API Back-end)
+- PostgreSQL
+- Supabase
+- MQTT (Comunicação com o microcontrolador ESP32)
+
+*Versionamento e Gestão:*
+- Git e GitHub (Projects, Issues e Wiki)
+
+---
+
+### Organização geral do repositório:
+
+O projeto está estruturado nos seguintes diretórios:
+
+- docs/ — Documentação técnica, levantamento de requisitos e regras de negócio
+- modelos/ — Diagramas de arquitetura (C4), diagrama de classes e modelo lógico do banco de dados
+- src/ — Códigos-fonte da aplicação web/mobile (componentes, páginas e serviços)
+- database/ — Scripts SQL de criação, relacionamento, rotinas e manipulação do banco de dados
+- tests/ — Casos e códigos de teste da aplicação
+
+---
+
+### Links e acompanhamento do projeto:
+
+- *Repositório GitHub:* https://github.com/S4naju/App-Controle-de-Medicamentos
+- *Documentação Técnica (Pasta /docs):* [docs/](docs/)
+- *Wiki (Documentação e Planejamento):* https://github.com/S4naju/App-Controle-de-Medicamentos/wiki
+- *Quadro Kanban (Gestão de Tarefas):* https://github.com/users/S4naju/projects/8/views/1
+
+---
+
+### Observações:
+
+Este projeto representa o desenvolvimento do MVP (Produto Mínimo Viável) da solução *Care Sync*, integrando engenharia de software, banco de dados e automação com microcontrolador (ESP32) para promover autonomia aos pacientes e segurança aos cuidadores.
+
+O desenvolvimento está sendo realizado de forma colaborativa pela equipe *Care Sync Team*, composta por estudantes da Graduação em Engenharia de Computação e do Curso Técnico.
+
+---
+
+### Integrantes da equipe (Care Sync Team):
+
+*Graduação (Engenharia de Computação):*
+- *Ana Julia Sampaio*
+- *Maycon Junior*
+- *Raimundo Guilherme*
+
+*Ensino Técnico:*
+- *Hugo Lopes*
+- *Michel Campos*
+- *Murilo Ribeiro*
+
+Disciplinas: *Engenharia de Software* e *Banco de Dados II*  
+Instituto Federal do Rio de Janeiro – *Campus Niterói*
