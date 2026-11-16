@@ -1,0 +1,347 @@
+﻿CURSO DE BACHARELADO EM ENGENHARIA DA COMPUTAÇÃO   
+ENGENHARIA DE SOFTWARE
+
+
+DOCUMENTAÇÃO TÉCNICA DO PROJETO INTEGRADOR DE ENGENHARIA DE SOFTWARE
+
+
+Care Sync
+
+
+Equipe
+	Care Sync Team
+	Integrantes
+	Graduação: Ana Julia Sampaio, Maycon Junior e Raimundo Guilherme
+Técnico: Hugo Lopes, Michel Campos e Murilo Ribeiro
+	Tema/Contexto da solução
+	Controle de Tempo e Uso de Medicamentos
+	Repositório Git
+	https://github.com/S4naju/App-Controle-de-Medicamentos 
+	Wiki de planejamento e documentação do projeto
+	https://github.com/S4naju/App-Controle-de-Medicamentos/wiki 
+	Quadro Kanban
+	https://github.com/users/S4naju/projects/8 
+	Semestre
+	2026.2
+	
+
+
+
+CONTROLE DE VERSÕES DA DOCUMENTAÇÃO
+Orientação: Registre uma nova versão a cada entrega ou atualização relevante, informando a data, a atividade correspondente, os responsáveis e um resumo das alterações.
+Versão
+	Data
+	Atividade/entrega
+	Responsável(is)
+	Principais alterações
+	1.0
+	15/11/2026
+	Documentação A1
+	Ana Julia, Raimundo Guilherme e Maycon Jr
+	Fizemos a parte documental do projeto junto com os diagramas principais 
+	[Preencher]
+	[Preencher]
+	[Preencher]
+	[Preencher]
+	[Preencher]
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1. CONTEXTO E OBJETIVO DA SOLUÇÃO
+        Diversas áreas da engenharia atuam diretamente na melhoria da qualidade de vida da população. Paralelamente, fatores como acidentes e limitações decorrentes da idade podem elevar o risco do uso indevido de medicamentos, exigindo soluções tecnológicas eficazes. Nesse contexto, pensamos em facilitar a vida de pessoas que administram doses de remédio diário, seja em hospitais, asilos ou ambientes domésticos. 
+O projeto tem como objetivo desenvolver um sistema inteligente de armazenamento e distribuição de medicamentos, permitindo que sejam acondicionados em compartimentos individuais, fora de suas embalagens originais, sem comprometer sua qualidade e eficácia, desde que respeitadas as condições adequadas de conservação. A distribuição dos medicamentos será realizada por meio de compartimentos mecânicos automatizados, acionados por um aplicativo web/mobile. A plataforma será responsável pelo gerenciamento dos horários das medicações, pelo monitoramento das doses e pela liberação dos medicamentos nos horários programados, garantindo maior controle e segurança para os pacientes, especialmente idosos.
+O sistema contará também com um sensor de peso acoplado ao recipiente de coleta do dispositivo (obs.: sujeito a alterações conforme o desenvolvimento do protótipo), permitindo identificar a presença do medicamento após a liberação e registrar a confirmação da retirada e do consumo pelo paciente. Além disso, o aplicativo realizará o monitoramento do tempo de permanência de cada medicamento no dispensador, mantendo o controle do período de armazenamento e emitindo alertas para evitar que esse prazo ultrapasse sete dias, conforme o limite de referência estabelecido pelo projeto, respeitadas as orientações específicas de conservação de cada medicamento. 
+1.1 Contexto do problema 
+
+
+O problema de
+	Má adesão medicamentosa, confusão de horários, dosagens duplicadas e a exclusão digital decorrente de interfaces móveis complexas.
+	afeta
+	Idosos em tratamento contínuo, pacientes com declínio cognitivo
+leve, pessoas que trabalham em hospitais e familiares/cuidadores responsáveis pelo monitoramento.
+	cujo impacto é
+	Intoxicações acidentais, piora em quadros clínicos crônicos, maior gasto de medicamentos, internações hospitalares evitáveis, sobrecarga emocional e estresse nos cuidadores.
+	uma boa solução seria
+	Um ecossistema integrado composto por um dispensador físico automatizado (IoT) acionado por aproximação e uma plataforma web/mobile para gestão e alertas instantâneos via WhatsApp.
+	
+
+1.2 Escopo do projeto (proposta de solução tecnológica)
+O projeto consiste no desenvolvimento de uma solução híbrida de IoT e aplicação web voltada à automação e gestão da administração de medicamentos. A plataforma web permite que cuidadores realizem o cadastro de tratamentos, dosagens, horários e contatos de emergência, sincronizando as informações em tempo real via nuvem com o dispositivo físico. O dispensador físico, controlado por um microcontrolador ESP32, opera com base em alertas sensoriais (luminosos e sonoros), destravamento mecânico do compartimento correto exclusivamente via autenticação por aproximação (RFID) e confirmação física da retirada por sensores ópticos. O sistema centraliza a telemetria do dispositivo, registrando o histórico de adesão e disparando notificações automáticas via API de mensageria (WhatsApp) aos cuidadores, garantindo autonomia ao idoso sem exigir interação direta com telas.
+
+
+
+
+
+
+
+
+1.3 Requisitos da Solução Tecnológica 
+
+
+1.3.1 Requisitos Funcionais (RF)
+Código
+	Descrição do Requisito Funcional
+	RF01
+	O sistema web deve permitir o cadastro, edição e exclusão de receitas médicas, vinculando remédio, dosagem e horário.
+
+
+	RF02
+	O dispensador IoT deve acionar sinalizadores sonoros (buzzer) e luminosos (LED) no horário exato configurado para a dose.
+
+
+	RF03
+	O hardware deve utilizar um sensor de peso para detectar e registrar a retirada do medicamento do compartimento de dispensação, permitindo o início da contagem do intervalo para a próxima dose.
+
+
+	RF04
+	O microcontrolador deve acionar o servo motor para destravar unicamente o compartimento correspondente à dose validada.
+
+
+	RF05
+	O sistema deve permitir que múltiplos usuários vinculem seus aplicativos a um mesmo dispensador mediante a autenticação por senha, possibilitando o acesso compartilhado ao medicamentos cadastrados e aos respectivos cronogramas de dispensação.
+	RF06
+	O backend deve disparar notificações automáticas pelo app informando a retirada do medicamento ao cuidador.
+
+
+	RF07
+	O sistema deve emitir alerta crítico de dose atrasada caso a retirada não ocorra em até 30 minutos após o alarme inicial.
+
+
+	
+
+
+
+1.3.2 Requisitos não funcionais (RNF)
+Código
+	Descrição do Requisito Não Funcional
+	Requisitos de Comunicação de Dados, Interface e Interoperabilidade:
+	RNF01
+	O hardware deve comunicar-se com a nuvem utilizando o protocolo seguro HTTPS/WebSockets e API REST/WebSockets e PostgreSQL via broker MQTT, alinhando o requisito à tabela de decisões. 
+
+
+	RNF02
+	A API de mensageria externa deve ser acionada via Webhooks com payload JSON padronizado em menos de 2 segundos após a validação física.
+	Requisitos de Confiabilidade:
+	RNF03
+	O hardware deve registrar transações não sincronizadas em memória não volátil (EEPROM/Flash) e retransmiti-las assim que a rede for restabelecida.
+	Requisitos de Desempenho e Robustez:
+	RNF04
+	O tempo entre a aproximação da tag RFID e o destravamento mecânico do compartimento não deve exceder 500 milissegundos.
+	RNF05
+	O serviço backend e o banco de dados em nuvem devem manter disponibilidade operacional mínima de 99,5% (alta disponibilidade)
+	Requisitos de Disponibilidade:
+	RNF06
+	A arquitetura do firmware deve ser modular, permitindo calibração individual dos sensores ópticos e servos sem refatoração do núcleo lógico.
+	RNF07
+	A interface de gestão do cuidador deve ser um Progressive Web App (PWA) totalmente responsivo, compatível com Chrome, Safari e Edge.
+	Requisitos de Manutenibilidade:
+	RNF08
+	Todos os dados sensíveis de saúde e prontuários devem ser criptografados em trânsito (TLS 1.3) e em repouso (AES-256).
+	Requisitos de Portabilidade:
+	RNF09
+	A interface do dispensador físico deve operar sem telas sensíveis ao toque, utilizando apenas feedback sonoro e luminotécnico de alto contraste.
+	Requisitos de Segurança:
+	RNF10
+	O sistema deve garantir que as informações dos medicamentos, tratamentos e históricos de dispensação sejam acessíveis apenas aos usuários autorizados e vinculados ao respectivo dispensador. 
+	RNF11
+	O sistema deve utilizar comunicação criptografada entre o aplicativo, o backend e o banco de dados, garantindo a confidencialidade e a integridade das informações transmitidas.
+	RNF12
+	O sistema deverá impedir que comandos duplicados ou inválidos provoquem dispensações não programadas, garantindo que cada medicamento seja liberado somente conforme os horários e quantidades previamente configurados. 
+	Requisitos de Usabilidade:
+	RNF13
+	O sistema deverá apresentar uma interface responsiva, adaptando-se a computadores, tablets e smartphones sem comprometer suas funcionalidades 
+	RNF14
+	O sistema deverá apresentar mensagens claras e de fácil compreensão para indicar dispensações realizadas, falhas de funcionamento e quantidade baixa de medicamentos. 
+	Restrições de Projeto e Tecnológicas:
+	RNF15
+	O firmware deve ser desenvolvido em C/C++ sobre o framework Arduino/ESP-IDF e a interface administrativa em React, CSS3, JavaScript e SQL.
+	RNF16
+	A comunicação entre o dispensador físico e o servidor deverá utilizar o protocolo MQTT, sendo o firmware do microcontrolador desenvolvido em C++. 
+	Restrições Legais:
+	RNF17
+	O sistema deverá observar a Lei Geral de Proteção de Dados Pessoais (LGPD — Lei nº 13.709/2018), garantindo o tratamento adequado dos dados pessoais e de saúde dos usuários, incluindo medidas de proteção e acesso restrito. 
+	
+
+
+
+1.3.3 Regras de negócio (RN)
+
+
+Código
+	Descrição da regra de negócio
+	RN01
+	A liberação de medicamentos somente poderá ocorrer quando houver um horário previamente cadastrado e uma quantidade definida para a dose. Não será permitida mais de uma dispensação para o mesmo agendamento, salvo mediante reagendamento explícito do usuário. 
+	RN02
+	A quantidade de medicamentos dispensada não poderá ultrapassar o estoque disponível no compartimento correspondente. Caso a quantidade seja insuficiente, a dispensação deverá ser impedida e uma ocorrência deverá ser registrada no sistema. 
+	RN03
+	Toda tentativa de dispensação deverá possuir um registro individual com data, horário, medicamento, quantidade e resultado da operação. Os registros históricos não poderão ser alterados automaticamente por modificações posteriores nos horários cadastrados. 
+	
+
+2. DESIGN E ARQUITETURA DA SOLUÇÃO
+2.1 Modelo de arquitetura — contexto do sistema (C4, nível 1)
+Cuidador/Profissional da Saúde: realiza o monitoramento dos medicamentos no aplicativo, cadastra pacientes, medicamentos e horários, consulta informações, acompanha as dispensações e recebe alertas de retirada e atraso.
+Paciente/Idoso: pessoa sujeita a tomar as medicações, que recebe os medicamentos e orientações disponibilizados e realiza a coleta da dose (liberando o sensor de peso).
+[Care Sync] Sistema de Dispensação Inteligente de Medicamentos: aplicativo de monitoramento e dispensador inteligente que gerencia o cadastro, disponibiliza os medicamentos e orientações ao paciente e dispara solicitações de notificação ao cuidador.
+Messaging Whatsapp: serviço externo de notificação responsável por receber os avisos do sistema e entregar alertas de retirada e atraso ao cuidador/profissional da saúde.
+
+
+  
+
+
+
+2.2 Modelo de arquitetura — contêineres (C4, nível 2)
+Cuidador/Profissional da Saúde: cadastra pacientes, medicamentos e horários no aplicativo, acompanha as dispensações e recebe alertas de retirada e atraso.
+Paciente/Idoso: recebe o medicamento e as orientações do dispensador e realiza a retirada da dose.
+App do Cuidador (aplicativo mobile/web): interface onde o cuidador/profissional cadastra pacientes, medicamentos e horários, além de consultar e acompanhar as dispensações, consumindo dados da API Backend via HTTPS/JSON.
+API Backend (API REST): centraliza a autenticação, as regras de negócio, a agenda de medicação e o registro das dispensações, lendo e gravando informações no Banco de Dados (via SQL) e comunicando-se com o Dispensador Inteligente (via HTTPS ou MQTT).
+Dispensador Inteligente (firmware e sensor de peso): recebe a agenda de horários da API Backend, libera o medicamento no horário programado com orientações ao paciente e detecta a retirada pelo sensor de peso, enviando os eventos de liberação e retirada de volta para a API.
+Banco de Dados (banco relacional): armazena os registros de pacientes, medicamentos, horários e eventos de dispensação.
+Serviço de Alertas (worker/agendador): consulta horários e eventos no Banco de Dados (via SQL) para detectar atrasos e retiradas, disparando os alertas de notificação para o Messaging WhatsApp via API HTTPS.
+Messaging WhatsApp (sistema externo): serviço externo de notificação que recebe os disparos do Serviço de Alertas e entrega os avisos de retirada e atraso ao cuidador/profissional da saúde.
+
+
+  
+
+
+
+2.3 Diagrama de classes do domínio da solução
+  
+(Diagrama feito no https://app.diagrams.net)
+
+
+2.4 Modelo lógico (relacional) do banco de dados
+O modelo lógico relacional apresentado a seguir foi desenvolvido para suportar a plataforma de gestão e monitoramento de administração de medicamentos. O esquema assegura a integridade referencial entre cuidadores/usuários, pacientes, dispensadores físicos (IoT), prescrições médicas e registros de auditoria de cada dose. 
+  
+
+(Modelo lógico feito brModelo)
+
+
+1. Tabelas e Atributos:
+* usuario (id_usuario, auth_user_id, nome, data_cadastro)
+   * auth_user_id referencia auth.users(id) (autenticação externa)
+* paciente (id_paciente, nome, data_nascimento, data_cadastro, fk_usuario_id_usuario)
+   * fk_usuario_id_usuario referencia usuario (id_usuario)
+* dispositivo (id_dispositivo, numero_serie, status_conexao, ultimo_contato, data_instalacao, fk_usuario_id_usuario)
+   * fk_usuario_id_usuario referencia usuario (id_usuario)
+* credencial_dispositivo (fk_dispositivo_id_dispositivo, senha_vinculo_hash, atualizada_em)
+   * fk_dispositivo_id_dispositivo (PK/FK) referencia dispositivo (id_dispositivo)
+* acesso_dispositivo (id_acesso, ativo, data_vinculo, fk_usuario_id_usuario, fk_dispositivo_id_dispositivo)
+   * fk_usuario_id_usuario referencia usuario (id_usuario)
+   * fk_dispositivo_id_dispositivo referencia dispositivo (id_dispositivo)
+* compartimento (id_compartimento, numero_compartimento, ativo, fk_usuario_id_usuario, fk_dispositivo_id_dispositivo)
+   * fk_usuario_id_usuario referencia usuario (id_usuario)
+   * fk_dispositivo_id_dispositivo referencia dispositivo (id_dispositivo)
+* vinculo_dispositivo (id_vinculo, data_inicio, data_fim, ativo, fk_usuario_id_usuario, fk_paciente_id_paciente, fk_dispositivo_id_dispositivo)
+   * fk_usuario_id_usuario referencia usuario (id_usuario)
+   * fk_paciente_id_paciente referencia paciente (id_paciente)
+   * fk_dispositivo_id_dispositivo referencia dispositivo (id_dispositivo)
+* medicamento (id_medicamento, nome, dosagem, instrucoes_armazenamento, data_cadastro, fk_usuario_id_usuario, fk_paciente_id_paciente)
+   * fk_usuario_id_usuario referencia usuario (id_usuario)
+   * fk_paciente_id_paciente referencia paciente (id_paciente)
+
+
+* abastecimento (id_abastecimento, quantidade_inicial, quantidade_atual, data_abastecimento, data_limite_armazenamento, ativo, fk_usuario_id_usuario, fk_medicamento_id_medicamento, fk_compartimento_id_compartimento)
+   * fk_usuario_id_usuario referencia usuario (id_usuario)
+   * fk_medicamento_id_medicamento referencia medicamento (id_medicamento)
+   * fk_compartimento_id_compartimento referencia compartimento (id_compartimento)
+
+
+* tratamento (id_tratamento, intervalo_minutos, quantidade_dose, tolerancia_retirada_minutos, data_inicio, data_fim, primeira_retirada_em, ultima_retirada_em, proxima_dose_em, estado_contagem, ativo, fk_usuario_id_usuario, fk_medicamento_id_medicamento)
+   * fk_usuario_id_usuario referencia usuario (id_usuario)
+   * fk_medicamento_id_medicamento referencia medicamento (id_medicamento)
+* dispensacao (id_dispensacao, chave_evento_dispositivo, data_hora_programada, data_hora_liberacao, prazo_retirada, data_hora_retirada, status, quantidade_liberada, retirada_confirmada_sensor, fk_usuario_id_usuario, fk_tratamento_id_tratamento, fk_abastecimento_id_abastecimento)
+   * fk_usuario_id_usuario referencia usuario (id_usuario)
+   * fk_tratamento_id_tratamento referencia tratamento (id_tratamento)
+   * fk_abastecimento_id_abastecimento referencia abastecimento (id_abastecimento)
+* alerta (id_alerta, tipo, mensagem, data_hora, visualizado (legado), fk_usuario_id_usuario, fk_dispensacao_id_dispensacao, fk_abastecimento_id_abastecimento)
+   * fk_usuario_id_usuario referencia usuario (id_usuario)
+   * fk_dispensacao_id_dispensacao referencia dispensacao (id_dispensacao)
+   * fk_abastecimento_id_abastecimento referencia abastecimento (id_abastecimento)
+* alerta_visualizacao (fk_alerta_id_alerta, fk_usuario_id_usuario, visualizado_em)
+   * fk_alerta_id_alerta (PK/FK) referencia alerta (id_alerta)
+   * fk_usuario_id_usuario (PK/FK) referencia usuario (id_usuario)
+
+
+2. Relacionamentos entre as tabelas
+* usuario  Demais Tabelas (Titularidade e RLS): Uma conta principal (usuario) é registrada como criadora/proprietária original nos registros (paciente, dispositivo, compartimento, vinculo_dispositivo, medicamento, abastecimento, tratamento, dispensacao e alerta), garantindo integridade referencial e controle de titularidade.
+* dispositivo  credencial_dispositivo (1:1): Cada dispensador físico possui no máximo um registro isolado de credencial (credencial_dispositivo), onde a chave primária é a própria chave estrangeira id_dispositivo, armazenando o hash da senha para pareamento seguro pelo backend.
+* usuario  acesso_dispositivo  dispositivo (N:N): Permite o acesso compartilhado. Múltiplos cuidadores (usuario) podem se vincular e gerenciar o mesmo dispensador (dispositivo), e um cuidador pode ter acesso a vários dispositivos simultaneamente.
+* paciente  vinculo_dispositivo  dispositivo (N:N Histórico): Conecta o paciente ao dispensador físico ao longo do tempo. Paciente e dispositivo podem ter sido cadastrados por usuários distintos; as regras do banco garantem que apenas um vínculo esteja ativo por vez para cada paciente e para cada aparelho.
+* dispositivo  compartimento (1:N): Um dispensador físico possui vários compartimentos físicos numerados (compartimento), e cada compartimento pertence obrigatoriamente a um único dispositivo.
+* paciente  medicamento (1:N): Um paciente pode ter vários medicamentos cadastrados em seu perfil, e cada medicamento pertence obrigatoriamente a um paciente específico.
+* medicamento  abastecimento  compartimento (N:N Histórico): Controla o estoque físico real carregado em cada compartimento. Um medicamento e um compartimento podem ter vários abastecimentos ao longo do tempo, mas cada compartimento admite apenas um abastecimento ativ por vez.
+* medicamento  tratamento (1:N): Define as regras de posologia por intervalo (intervalo_minutos), quantidade por dose, tolerância de retirada e estado atual da contagem para cada medicamento.
+* tratamento  dispensacao  abastecimento (1:N): Cada tratamento gera múltiplos registros de eventos na tabela dispensacao (programação, liberação mecânica, prazo limite e confirmação de retirada pelo sensor), ligando-se opcionalmente ao lote de abastecimento utilizado.
+* dispensacao / abastecimento  alerta (0..1:N): O sistema gera notificações na tabela alerta vinculadas opcionalmente a uma dispensacao (atraso na retirada, falha mecânica ou de sensor) ou a um abastecimento (estoque baixo ou prazo de armazenamento vencido).
+* alerta  alerta_visualizacao  usuario (N:N): Como um dispositivo pode ser acompanhado por vários cuidadores, a tabela associativa alerta_visualizacao registra individualmente qual usuario leu cada alerta e em qual data/hora (substituindo o antigo campo único visualizado).
+
+
+
+
+2.5 Estilo arquitetural e justificativa
+O projeto adotará a Arquitetura em Camadas, separando o sistema em apresentação, lógica de negócio, persistência de dados e integração com o dispositivo físico.
+A camada de apresentação será responsável pela interface do aplicativo, permitindo ao usuário cadastrar medicamentos, configurar horários e acompanhar as dispensações. A camada de lógica de negócio realizará o processamento das informações, a validação dos agendamentos e o gerenciamento das operações. A camada de persistência será responsável pelo armazenamento dos medicamentos, horários e históricos, enquanto a camada de integração permitirá a comunicação com o dispensador físico por meio do protocolo MQTT.
+A escolha dessa arquitetura se justifica pela facilidade de organização, manutenção e desenvolvimento em equipe, permitindo que os integrantes trabalhem em diferentes partes do sistema de forma independente. Além disso, sua estrutura apresenta complexidade adequada ao MVP, facilita a realização de testes e permite a integração das tecnologias escolhidas, priorizando ferramentas gratuitas e de fácil acesso.
+Essa organização também possibilita futuras melhorias no aplicativo sem a necessidade de modificar toda a estrutura do sistema.
+
+
+3. DECISÕES TECNOLÓGICAS
+Tecnologia
+	Finalidade
+	Justificativa 
+	React 
+	Desenvolvimento da interface do aplicativo.
+	Permite criar uma interface dinâmica e responsiva, facilitando o desenvolvimento das telas de gestão de receitas, horários e monitoramento. 
+	JavaScript 
+	Implementação das funcionalidades e interações do usuário.
+	Possui ampla documentação, é compatível com React e facilita a comunicação com o Back-end. 
+	C# / .NET Core 
+	Desenvolvimento da API Back-end e gerenciamento das regras de negócio. 
+	Oferece recursos para desenvolver APIs, processar informações e integrar o aplicativo ao banco de dados. 
+	C++ 
+	Programação do microcontrolador (ESP32) responsável pelo dispensador físico. 
+	Permite controlar os componentes eletrônicos e implementar as operações de dispensação. 
+	MQTT 
+	Protocolo de mensageria IoT entre o dispensador físico e o backend.
+	É um protocolo extremamente leve, adequado para dispositivos IoT, permitindo a troca de mensagens com baixo consumo de recursos. 
+	PostgreSQL 
+	Sistema Gerenciador de Banco de Dados (SGBD) responsável pelo armazenamento das informações dos medicamentos, horários programados, quantidades disponíveis e histórico de dispensações.
+	É gratuito, de código aberto e oferece segurança, integridade e organização dos dados, além de permitir integração com o Back-end desenvolvido em C#.
+	GitHub 
+	Controle de versão, repositório remoto e organização do fluxo de trabalho.
+	Permite o versionamento seguro do código-fonte, rastreabilidade de alterações e colaboração paralela entre os integrantes da equipe.
+	Visual Studio Code 
+	Ambiente de desenvolvimento integrado (IDE).
+	Editor modular, gratuito e extensível, com suporte nativo e plugins para desenvolvimento em React, C++, scripts SQL e depuração. 
+	ESP32 
+	Microcontrolador responsável pelo controle físico do dispensador de medicamentos e pela comunicação com o aplicativo. 
+	Possui conectividade Wi-Fi integrada, baixo custo e compatibilidade com C++ e MQTT, permitindo automatizar a dispensação e transmitir informações ao sistema. 
+	Hospedagem local 
+	Execução de testes do Back-end, banco de dados e broker MQTT em ambiente de desenvolvimento. 
+	Reduz custos e permite realizar testes de integração sem depender inicialmente de serviços pagos de hospedagem. 
+	
+
+Engenharia de Software – Projeto Integrador | Documentação Técnica do Projeto X
