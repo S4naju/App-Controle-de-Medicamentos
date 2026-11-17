@@ -7,12 +7,14 @@ BEGIN
     CREATE ROLE caresync_dispositivo NOLOGIN;
   END IF;
 END $$;
+-- Permite ao usuario administrador (SQL Editor) assumir o papel nos testes de acesso
+GRANT caresync_dispositivo TO postgres;
 
--- 2. Parte do zero: remove privilegios padrao
+-- 2. Parte do zero: remove privilegios padrao e libera apenas o uso do schema
 REVOKE ALL ON ALL TABLES IN SCHEMA public FROM anon, authenticated, caresync_dispositivo;
-GRANT USAGE ON SCHEMA public TO authenticated, caresync_dispositivo;
+GRANT USAGE ON SCHEMA public TO anon, authenticated, caresync_dispositivo;
 
--- 3. Funcao auxiliar: id_usuario do usuario logado
+-- 3. Funcao auxiliar: id_usuario (uuid) do usuario logado
 CREATE OR REPLACE FUNCTION public.id_usuario_atual()
 RETURNS uuid
 LANGUAGE sql STABLE SECURITY DEFINER
@@ -23,30 +25,30 @@ REVOKE ALL ON FUNCTION public.id_usuario_atual() FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.id_usuario_atual() TO authenticated;
 
 -- 4. Privilegios do CUIDADOR (authenticated)
-GRANT SELECT, UPDATE (nome)                      ON public.usuario              TO authenticated;
-GRANT SELECT, INSERT, UPDATE                     ON public.paciente             TO authenticated;
-GRANT SELECT, INSERT, UPDATE                     ON public.dispositivo          TO authenticated;
-GRANT SELECT, INSERT, UPDATE                     ON public.compartimento        TO authenticated;
-GRANT SELECT, INSERT, UPDATE                     ON public.vinculo_dispositivo  TO authenticated;
-GRANT SELECT, INSERT, UPDATE                     ON public.medicamento          TO authenticated;
-GRANT SELECT, INSERT, UPDATE                     ON public.abastecimento        TO authenticated;
-GRANT SELECT, INSERT, UPDATE                     ON public.tratamento           TO authenticated;
-GRANT SELECT, INSERT, UPDATE                     ON public.acesso_dispositivo   TO authenticated;
-GRANT SELECT                                     ON public.dispensacao          TO authenticated;  -- historico: somente leitura
-GRANT SELECT                                     ON public.alerta               TO authenticated;  -- gerado pelo sistema
-GRANT SELECT, INSERT                             ON public.alerta_visualizacao  TO authenticated;
+GRANT SELECT, UPDATE (nome)  ON public.usuario              TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.paciente             TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.dispositivo          TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.compartimento        TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.vinculo_dispositivo  TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.medicamento          TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.abastecimento        TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.tratamento           TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.acesso_dispositivo   TO authenticated;
+GRANT SELECT                 ON public.dispensacao          TO authenticated;  -- historico: somente leitura
+GRANT SELECT                 ON public.alerta               TO authenticated;  -- gerado pelo sistema
+GRANT SELECT, INSERT         ON public.alerta_visualizacao  TO authenticated;
 -- credencial_dispositivo: nenhum privilegio para authenticated
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO authenticated;
 
 -- 5. Privilegios do DISPOSITIVO
 GRANT SELECT ON public.dispositivo, public.compartimento, public.medicamento,
                 public.abastecimento, public.tratamento TO caresync_dispositivo;
-GRANT UPDATE (status_conexao, ultimo_contato)     ON public.dispositivo    TO caresync_dispositivo;
-GRANT UPDATE (quantidade_atual)                   ON public.abastecimento  TO caresync_dispositivo;
+GRANT UPDATE (status_conexao, ultimo_contato) ON public.dispositivo   TO caresync_dispositivo;
+GRANT UPDATE (quantidade_atual)               ON public.abastecimento TO caresync_dispositivo;
 GRANT UPDATE (primeira_retirada_em, ultima_retirada_em, proxima_dose_em, estado_contagem)
-                                                  ON public.tratamento     TO caresync_dispositivo;
-GRANT SELECT, INSERT, UPDATE                      ON public.dispensacao    TO caresync_dispositivo;
-GRANT SELECT, INSERT                              ON public.alerta         TO caresync_dispositivo;
+                                              ON public.tratamento    TO caresync_dispositivo;
+GRANT SELECT, INSERT, UPDATE                  ON public.dispensacao   TO caresync_dispositivo;
+GRANT SELECT, INSERT                          ON public.alerta        TO caresync_dispositivo;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO caresync_dispositivo;
 -- credencial_dispositivo e verificada por funcao no backend (service_role), nao lida diretamente
 
