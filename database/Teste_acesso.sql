@@ -14,7 +14,9 @@ BEGIN;
 SET LOCAL ROLE authenticated;
 SELECT set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-000000000001","role":"authenticated"}', true);
 SELECT set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-000000000001', true);
-SELECT id_paciente, nome FROM public.paciente WHERE id_usuario <> public.id_usuario_atual();
+SELECT count(*) FILTER (WHERE id_usuario <> public.id_usuario_atual()) AS de_outros_usuarios,
+       count(*) AS total_visivel
+FROM public.paciente;
 ROLLBACK;
 
 -- T03 | AUTORIZADO | Cuidador atualiza os proprios medicamentos
@@ -32,8 +34,13 @@ BEGIN;
 SET LOCAL ROLE authenticated;
 SELECT set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-000000000001","role":"authenticated"}', true);
 SELECT set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-000000000001', true);
-UPDATE public.medicamento SET dosagem = dosagem WHERE id_usuario <> public.id_usuario_atual() RETURNING id_medicamento;
+WITH u AS (
+  UPDATE public.medicamento SET dosagem = dosagem
+  WHERE id_usuario <> public.id_usuario_atual() RETURNING 1
+)
+SELECT count(*) AS linhas_atualizadas FROM u;
 ROLLBACK;
+
 
 -- T05 | NAO AUTORIZADO | Cuidador tenta cadastrar paciente em nome de outro usuario (usuario02)
 -- Esperado: ERRO "new row violates row-level security policy"
