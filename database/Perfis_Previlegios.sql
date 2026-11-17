@@ -14,7 +14,7 @@ GRANT USAGE ON SCHEMA public TO authenticated, caresync_dispositivo;
 
 -- 3. Funcao auxiliar: id_usuario do usuario logado
 CREATE OR REPLACE FUNCTION public.id_usuario_atual()
-RETURNS bigint
+RETURNS uuid
 LANGUAGE sql STABLE SECURITY DEFINER
 SET search_path = public AS $$
   SELECT id_usuario FROM public.usuario WHERE auth_user_id = auth.uid();
@@ -47,8 +47,7 @@ GRANT UPDATE (primeira_retirada_em, ultima_retirada_em, proxima_dose_em, estado_
                                                   ON public.tratamento     TO caresync_dispositivo;
 GRANT SELECT, INSERT, UPDATE                      ON public.dispensacao    TO caresync_dispositivo;
 GRANT SELECT, INSERT                              ON public.alerta         TO caresync_dispositivo;
-GRANT USAGE ON SEQUENCE public.dispensacao_id_dispensacao_seq TO caresync_dispositivo;
-GRANT USAGE ON SEQUENCE public.alerta_id_alerta_seq           TO caresync_dispositivo;
+GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO caresync_dispositivo;
 -- credencial_dispositivo e verificada por funcao no backend (service_role), nao lida diretamente
 
 -- 6. RLS: cada cuidador ve e altera apenas os proprios dados
