@@ -7,7 +7,7 @@ INSERT INTO auth.users
    raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
    is_sso_user, is_anonymous)
 SELECT
-  ('' || lpad(g::text, 12, '0'))::uuid,
+  ('00000000-0000-4000-8000-' || lpad(g::text, 12, '0'))::uuid,
   'authenticated', 'authenticated',
   'demo.usuario' || lpad(g::text, 2, '0') || '@caresync.example',
   crypt('CareSync#2026-' || lpad(g::text, 2, '0'), gen_salt('bf')),
