@@ -1,12 +1,3 @@
--- CARESYNC | SCRIPT DE PERFIS, PRIVILEGIOS E RLS (secao 4.2)
--- Ambiente: Supabase / PostgreSQL (executar em projeto de DESENVOLVIMENTO/teste)
--- Perfis:
---   anon                  -> visitante sem login: nenhum acesso
---   authenticated         -> Cuidador/Profissional da Saude (usuarios demo 01 a 20)
---   caresync_dispositivo  -> dispensador (firmware via backend/Edge Function)
---   service_role          -> administracao (somente backend, nunca no app)
--- Este script NAO contem senhas nem tokens.
-
 BEGIN;
 
 -- 1. Papel do dispositivo (sem login direto; assumido pelo backend)

@@ -1,10 +1,4 @@
--- CARESYNC | CONSULTAS SQL EXIGIDAS NA ATIVIDADE
--- Execute depois de criar a estrutura e inserir os dados de demonstracao.
-
--- ============================================================
--- A) 5 CONSULTAS SIMPLES / QUALIFICADAS
--- ============================================================
-
+--CONSULTAS SIMPLES
 -- 1. Listar pacientes cadastrados em ordem alfabetica.
 SELECT id_paciente, nome, data_nascimento, data_cadastro
 FROM public.paciente
@@ -34,11 +28,8 @@ FROM public.dispensacao
 WHERE status IN ('PROGRAMADA', 'LIBERADA', 'ATRASADA')
 ORDER BY data_hora_programada DESC;
 
--- ============================================================
--- B) 3 CONSULTAS COM JOIN (2 OU MAIS TABELAS), AGRUPAMENTO,
---    AGREGACAO E FILTROS
--- ============================================================
 
+--CONSULTAS JOINS
 -- 6. Quantidade de medicamentos cadastrados por paciente.
 SELECT p.id_paciente, p.nome AS paciente,
        COUNT(m.id_medicamento) AS total_medicamentos
@@ -72,10 +63,8 @@ GROUP BY p.nome, m.nome
 HAVING SUM(a.quantidade_atual) <= 15
 ORDER BY estoque_atual ASC;
 
--- ============================================================
--- C) 3 SUBCONSULTAS (IN, ALL, ANY e EXISTS)
--- ============================================================
 
+--SUBCONSULTAS: IN, ALL, EXISTS E ANY
 -- 9. Pacientes que possuem pelo menos um medicamento cadastrado (IN).
 SELECT id_paciente, nome
 FROM public.paciente
@@ -108,7 +97,7 @@ WHERE EXISTS (
 )
 ORDER BY u.nome;
 
--- CONSULTA EXTRA OPCIONAL: medicamentos cuja quantidade atual seja
+-- CONSULTA EXTRA: medicamentos cuja quantidade atual seja
 -- maior que pelo menos um estoque registrado (ANY).
 SELECT m.nome, a.quantidade_atual
 FROM public.medicamento m
