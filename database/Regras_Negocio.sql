@@ -1,7 +1,7 @@
 BEGIN;
 
--- 1. FUNCTIONS
--- Function 1: Validação prévia de elegibilidade de dispensação (RN01 e RN02)
+--FUNCTIONS
+-- 1. verifica se o tratamento ta ativo e se tem remédio suficiente antes de liberar ele (RN01 e RN02)
 CREATE OR REPLACE FUNCTION public.fn_verificar_disponibilidade_dose(
     p_id_tratamento uuid
 )
@@ -30,7 +30,7 @@ BEGIN
 END;
 $$;
 
--- Function 2: Cálculo da taxa de adesão do paciente (%)
+-- 2. calcula a taxa de adesão do paciente em porcentagem
 CREATE OR REPLACE FUNCTION public.fn_calcular_taxa_adesao(
     p_id_paciente uuid,
     p_dias integer DEFAULT 30
@@ -61,7 +61,7 @@ BEGIN
 END;
 $$;
 
--- Function 3: Estimativa de autonomia em dias do abastecimento ativo
+-- 3. estima quantos dias o estoque daquele compartimento ainda dura
 CREATE OR REPLACE FUNCTION public.fn_dias_autonomia_abastecimento(
     p_id_abastecimento uuid
 )
@@ -91,29 +91,28 @@ END;
 $$;
 
 
--- 2. TRIGGERS
--- Trigger 1: Impede dupla dispensação (RN01) e alteração de histórico (RN03)
+--TRIGGERS
+-- 1. impede liberar a mesma dose 2x (RN01) e bloqueia qualquer alterção em históricos ja finalizados(RN03)
 CREATE OR REPLACE FUNCTION public.tg_fn_validar_dispensacao()
 RETURNS trigger
 LANGUAGE plpgsql
 AS $$
 BEGIN
-    -- RN03: Bloqueia alteração retroativa em registros históricos finalizados
+    --RN03
     IF TG_OP = 'UPDATE' THEN
         IF OLD.status IN ('RETIRADA', 'RETIRADA_COM_ATRASO', 'FALHA', 'CANCELADA') THEN
-            -- Permite reagendamento explícito apenas se voltar para PROGRAMADA sem retirada
-            IF NOT (NEW.status = 'PROGRAMADA' AND OLD.retirada_confirmada_sensor = false) THEN
+            IF NOT (NEW.status = 'PROGRAMADA' AND OLD.retirada_confirmada_sensor = false) THEN -- Permite reagendamento explícito apenas se voltar para PROGRAMADA sem retirada
                 RAISE EXCEPTION 'RN03: Registros históricos de dispensação (%) não podem ser alterados.', OLD.id_dispensacao;
             END IF;
         END IF;
 
-        -- RN01: Impede liberar novamente um agendamento já liberado sem reagendamento explícito
+        --RN01
         IF OLD.status IN ('LIBERADA', 'ATRASADA') AND NEW.status = 'LIBERADA' THEN
             RAISE EXCEPTION 'RN01: Não é permitida mais de uma dispensação para o mesmo agendamento sem reagendamento explícito.';
         END IF;
     END IF;
 
-    -- RN01: Exige quantidade definida para liberação
+    --RN01
     IF NEW.status = 'LIBERADA' AND COALESCE(NEW.quantidade_liberada, 0) <= 0 THEN
         RAISE EXCEPTION 'RN01: A liberação exige uma quantidade de dose maior que zero.';
     END IF;
@@ -127,7 +126,7 @@ BEFORE INSERT OR UPDATE ON public.dispensacao
 FOR EACH ROW
 EXECUTE FUNCTION public.tg_fn_validar_dispensacao();
 
--- Trigger 2: Gera alerta automático de ESTOQUE_BAIXO ao debitar abastecimento
+--2. dispara um alerta automaático de ESTOQUE_BAIXO assim que o saldo cai para 10% ou -
 CREATE OR REPLACE FUNCTION public.tg_fn_alerta_estoque_baixo()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -166,7 +165,7 @@ AFTER UPDATE OF quantidade_atual ON public.abastecimento
 FOR EACH ROW
 EXECUTE FUNCTION public.tg_fn_alerta_estoque_baixo();
 
--- Trigger 3: Protege histórico contra exclusão (RN03)
+--3. proíbe qualquer exlusão (DELETE) na tabela de dispensão, garantindo a imutabilidade do histórico (RN03)
 CREATE OR REPLACE FUNCTION public.tg_fn_proteger_historico_dispensacao()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -182,8 +181,8 @@ FOR EACH ROW
 EXECUTE FUNCTION public.tg_fn_proteger_historico_dispensacao();
 
 
--- 3. PROCEDURES
--- Procedure 1: Executa a dispensação aplicando RN01, RN02 e RN03
+--PROCEDURES
+-- 1. executada no momento em que o sistema precisa dispensar um medicamento agendado (aplicando RN01, RN02 e RN03)
 CREATE OR REPLACE PROCEDURE public.sp_registrar_dispensacao(
     p_id_dispensacao uuid,
     p_chave_evento varchar(120)
@@ -204,13 +203,13 @@ BEGIN
         RAISE EXCEPTION 'RN01: Agendamento de dispensação (%) não encontrado.', p_id_dispensacao;
     END IF;
 
-    -- RN01: Valida estado do agendamento
+    --RN01: valida estado do agendamento
     IF v_disp.status <> 'PROGRAMADA' THEN
         RAISE EXCEPTION 'RN01: Agendamento % não está disponível para liberação (status atual: %).',
             p_id_dispensacao, v_disp.status;
     END IF;
 
-    -- Busca tratamento e dose configurada
+    -- busca tratamento e dose configurada
     SELECT * INTO v_trat 
     FROM public.tratamento 
     WHERE id_tratamento = v_disp.id_tratamento AND ativo = true;
@@ -219,7 +218,7 @@ BEGIN
         RAISE EXCEPTION 'RN01: Tratamento inativo ou sem quantidade de dose definida.';
     END IF;
 
-    -- Busca estoque ativo do medicamento
+    -- busca estoque ativo do medicamento
     SELECT * INTO v_abast 
     FROM public.abastecimento 
     WHERE id_medicamento = v_trat.id_medicamento 
@@ -227,7 +226,7 @@ BEGIN
       AND ativo = true
     FOR UPDATE;
 
-    -- RN02: Verifica estoque suficiente; se faltar, registra ocorrência e falha
+    --RN02: verifica estoque suficiente. se faltar, registra ocorrência e falha
     IF NOT FOUND OR v_abast.quantidade_atual < v_trat.quantidade_dose THEN
         UPDATE public.dispensacao
         SET status = 'FALHA',
@@ -247,12 +246,12 @@ BEGIN
         RETURN;
     END IF;
 
-    -- Baixa no estoque (dispara tg_alerta_estoque_baixo se atingir limite)
+    -- baixa no estoque (dispara tg_alerta_estoque_baixo se atingir limite)
     UPDATE public.abastecimento
     SET quantidade_atual = quantidade_atual - v_trat.quantidade_dose
     WHERE id_abastecimento = v_abast.id_abastecimento;
 
-    -- RN03: Atualiza o registro individual da dispensação
+    --RN03: atualiza o registro individual da dispensação
     UPDATE public.dispensacao
     SET id_abastecimento = v_abast.id_abastecimento,
         chave_evento_dispositivo = p_chave_evento,
@@ -262,14 +261,14 @@ BEGIN
         quantidade_liberada = v_trat.quantidade_dose
     WHERE id_dispensacao = p_id_dispensacao;
 
-    -- Atualiza estado do tratamento
+    -- atualiza estado do tratamento
     UPDATE public.tratamento
     SET estado_contagem = 'AGUARDANDO_RETIRADA'
     WHERE id_tratamento = v_trat.id_tratamento;
 END;
 $$;
 
--- Procedure 2: Reabastecimento seguro de compartimento
+-- 2. reabastecimento seguro de compartimento
 CREATE OR REPLACE PROCEDURE public.sp_reabastecer_compartimento(
     p_id_usuario uuid,
     p_id_medicamento uuid,
@@ -284,14 +283,14 @@ BEGIN
         RAISE EXCEPTION 'A quantidade abastecida deve ser maior que zero.';
     END IF;
 
-    -- Desativa o abastecimento anterior do mesmo compartimento (respeita ux_abastecimento_ativo_compartimento)
+    -- desativa o abastecimento anterior do msm compartimento (respeita ux_abastecimento_ativo_compartimento)
     UPDATE public.abastecimento
     SET ativo = false
     WHERE id_compartimento = p_id_compartimento
       AND id_usuario = p_id_usuario
       AND ativo = true;
 
-    -- Insere o novo lote ativo
+    -- insere o novo lote ativo
     INSERT INTO public.abastecimento (
         id_usuario, id_medicamento, id_compartimento,
         quantidade_inicial, quantidade_atual,
@@ -304,7 +303,7 @@ BEGIN
 END;
 $$;
 
--- Procedure 3: Confirmação de retirada pelo sensor e agendamento da próxima dose
+-- 3. confirmação de retirada pelo sensor e agendamento da próxima dose
 CREATE OR REPLACE PROCEDURE public.sp_confirmar_retirada_sensor(
     p_id_dispensacao uuid
 )
@@ -343,14 +342,14 @@ BEGIN
         v_novo_status := 'RETIRADA';
     END IF;
 
-    -- Atualiza a dispensação concluída
+    -- atualiza a dispensação concluída
     UPDATE public.dispensacao
     SET data_hora_retirada = v_agora,
         retirada_confirmada_sensor = true,
         status = v_novo_status
     WHERE id_dispensacao = p_id_dispensacao;
 
-    -- Calcula próximo ciclo baseado no intervalo (tratamento por intervalo)
+    -- calcula próximo ciclo baseado no intervalo (tratamento por intervalo)
     v_proxima := v_agora + (v_trat.intervalo_minutos || ' minutes')::interval;
 
     UPDATE public.tratamento
@@ -360,7 +359,7 @@ BEGIN
         estado_contagem = 'CONTANDO'
     WHERE id_tratamento = v_trat.id_tratamento;
 
-    -- Cria próximo agendamento programado automaticamente
+    -- cria próximo agendamento programado automaticamente
     INSERT INTO public.dispensacao (
         id_usuario, id_tratamento, id_abastecimento,
         data_hora_programada, status
