@@ -5,8 +5,7 @@
 ---
 
 ### Sobre o projeto:
-Este projeto foi desenvolvido de forma integrada para as disciplinas de *Engenharia de Software* e *Banco de Dados II* no *IFRJ - Campus Niterói*, com o objetivo de aplicar na prática os conceitos de arquitetura de software, modelagem avançada, persistência, integridade referencial, versionamento e integração entre uma aplicação web/mobile e um dispositivo físico (IoT).
-
+Este projeto foi desenvolvido de forma integrada para as disciplinas de *Engenharia de Software* e *Banco de Dados II* no *IFRJ - Campus Niterói*, este sistema conecta uma interface web/mobile a um dispositivo IoT. O desenvolvimento engloba a estruturação da arquitetura, a modelagem e integridade dos dados e o fluxo de integração contínua entre o aplicativo e o hardware.
 ---
 
 ### Objetivo da solução proposta:
