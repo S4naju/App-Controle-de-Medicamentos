@@ -18,13 +18,13 @@ A solução permite armazenar os remédios fora de suas embalagens originais sem
 
 ### Estrutura do sistema (Visão Geral do Banco de Dados):
 
-O banco de dados relacional está sendo estruturado no *PostgreSQL* (hospedado no *Supabase) e contempla as seguintes entidades principais *(obs.: modelagem inicial sujeita a ajustes durante a evolução do projeto):
+O banco de dados relacional é estruturado no PostgreSQL (hospedado no Supabase) e organiza o fluxo de informações da plataforma nos seguintes domínios principais:
 
-- *Usuário e Paciente:* Cadastro dos cuidadores responsáveis e dos pacientes assistidos.
-- *Dispositivo, Compartimento e Vínculo:* Gerenciamento dos dispensadores físicos (ESP32), status de conexão, compartimentos individuais e associação com os pacientes.
-- *Medicamento e Abastecimento:* Controle dos remédios cadastrados, estoque atual em cada compartimento e monitoramento da data limite de armazenamento (7 dias).
-- *Tratamento e Dispensação:* Regras de intervalo entre doses, tolerância de retirada, agendamentos e auditoria de cada liberação confirmada pelos sensores.
-- *Alerta:* Registro e disparo de notificações referentes a atrasos de retirada, estoque baixo, prazo de armazenamento ou falhas no dispositivo.
+- Controle de Acesso e Perfis: Gerenciamento de contas de cuidadores responsáveis, pacientes assistidos e seus respectivos níveis de permissão.
+- Hardware e Conectividade: Registro dos dispensadores físicos (ESP32), mapeamento de compartimentos individuais, status de operação e vínculos com os pacientes.
+- Estoque e Insumos: Catálogo de medicamentos, controle de abastecimento por compartimento e rastreamento de validade/tempo de armazenamento.
+- Prescrições e Auditoria: Regras de posologia (intervalos e janelas de tolerância), cronograma de doses e histórico detalhado das dispensações confirmadas pelos sensores.
+- Monitoramento e Notificações: Logs de eventos do sistema e fila de alertas para atrasos de retirada, reposição de estoque, vencimento ou falhas de hardware.
 
 ---
 
