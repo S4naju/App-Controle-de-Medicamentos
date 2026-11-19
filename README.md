@@ -6,11 +6,11 @@
 
 ### Sobre o projeto:
 Este projeto foi desenvolvido de forma integrada para as disciplinas de *Engenharia de Software* e *Banco de Dados II* no *IFRJ - Campus Niterói*, este sistema conecta uma interface web/mobile a um dispositivo IoT. O desenvolvimento engloba a estruturação da arquitetura, a modelagem e integridade dos dados e o fluxo de integração contínua entre o aplicativo e o hardware.
+
 ---
 
 ### Objetivo da solução proposta:
-Fatores como acidentes e limitações decorrentes da idade podem elevar o risco do uso indevido, esquecimento ou duplicação de doses de medicamentos. O objetivo do *Care Sync* é facilitar a rotina de pessoas que administram medicações diárias — em ambientes domésticos, asilos ou hospitais — garantindo maior segurança e autonomia aos pacientes e tranquilidade aos cuidadores.
-
+Fatores como acidentes e limitações decorrentes da idade podem elevar o risco do uso indevido, esquecimento ou duplicação de doses de medicamentos. O objetivo do *Care Sync* é facilitar a rotina de pessoas que administram medicações diárias — em ambientes domésticos, asilos ou hospitais — garantindo maior segurança e autonomia aos pacientes e tranquilidade aos cuidadores. 
 A solução permite armazenar os remédios fora de suas embalagens originais sem comprometer sua integridade, controlando o tempo de permanência no dispensador (limite máximo de 7 dias). O aplicativo realiza o agendamento das doses, sincroniza a liberação de compartimentos mecânicos automatizados (ESP32), valida a retirada e o consumo por meio de um sensor de peso no recipiente de dispensação e de um sensor de detecção da ação do paciente (obs.: arquitetura de sensores sujeita a alterações conforme os testes de hardware), e dispara alertas instantâneos aos responsáveis em caso de não consumo, disponibilizando uma opção de ligação de emergência.
 
 ---
