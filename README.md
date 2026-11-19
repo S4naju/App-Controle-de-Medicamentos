@@ -20,11 +20,11 @@ A solução permite armazenar os remédios fora de suas embalagens originais sem
 
 O banco de dados relacional é estruturado no PostgreSQL (hospedado no Supabase) e organiza o fluxo de informações da plataforma nos seguintes domínios principais:
 
-- Controle de Acesso e Perfis: Gerenciamento de contas de cuidadores responsáveis, pacientes assistidos e seus respectivos níveis de permissão.
-- Hardware e Conectividade: Registro dos dispensadores físicos (ESP32), mapeamento de compartimentos individuais, status de operação e vínculos com os pacientes.
-- Estoque e Insumos: Catálogo de medicamentos, controle de abastecimento por compartimento e rastreamento de validade/tempo de armazenamento.
-- Prescrições e Auditoria: Regras de posologia (intervalos e janelas de tolerância), cronograma de doses e histórico detalhado das dispensações confirmadas pelos sensores.
-- Monitoramento e Notificações: Logs de eventos do sistema e fila de alertas para atrasos de retirada, reposição de estoque, vencimento ou falhas de hardware.
+- *Controle de Acesso e Perfis*: Gerenciamento de contas de cuidadores responsáveis, pacientes assistidos e seus respectivos níveis de permissão.
+- *Hardware e Conectividade*: Registro dos dispensadores físicos (ESP32), mapeamento de compartimentos individuais, status de operação e vínculos com os pacientes.
+- *Estoque e Insumos*: Catálogo de medicamentos, controle de abastecimento por compartimento e rastreamento de validade/tempo de armazenamento.
+- *Prescrições e Auditoria*: Regras de posologia (intervalos e janelas de tolerância), cronograma de doses e histórico detalhado das dispensações confirmadas pelos sensores.
+- *Monitoramento e Notificações*: Logs de eventos do sistema e fila de alertas para atrasos de retirada, reposição de estoque, vencimento ou falhas de hardware.
 
 ---
 
@@ -51,9 +51,9 @@ O sistema permite o gerenciamento completo do ecossistema de medicação, contem
 
 *Back-end, Banco de Dados e Integração IoT:*
 - C# / .NET Core (API Back-end)
-- PostgreSQL
-- Supabase
+- PostgreSQL (Supabase)
 - MQTT (Comunicação com o microcontrolador ESP32)
+- C++ (Programação do microcontrolador ESP32)
 
 *Versionamento e Gestão:*
 - Git e GitHub (Projects, Issues e Wiki)
