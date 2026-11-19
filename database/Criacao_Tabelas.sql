@@ -138,7 +138,7 @@ CREATE TABLE public.dispensacao (
   id_usuario uuid NOT NULL REFERENCES public.usuario(id_usuario) ON DELETE CASCADE,
   id_tratamento uuid NOT NULL,
   id_abastecimento uuid,
-  chave_evento_dispositivo varchar(120), -- idempotencia para MQTT/reenvios
+  chave_evento_dispositivo varchar(120),
   data_hora_programada timestamptz NOT NULL,
   data_hora_liberacao timestamptz,
   prazo_retirada timestamptz,
