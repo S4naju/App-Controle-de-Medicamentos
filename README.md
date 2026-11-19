@@ -10,7 +10,7 @@ Este projeto foi desenvolvido de forma integrada para as disciplinas de *Engenha
 ---
 
 ### Objetivo da solução proposta:
-Fatores como acidentes e limitações decorrentes da idade podem elevar o risco do uso indevido, esquecimento ou duplicação de doses de medicamentos. O objetivo do *Care Sync* é facilitar a rotina de pessoas que administram medicações diárias — em ambientes domésticos, asilos ou hospitais — garantindo maior segurança e autonomia aos pacientes e tranquilidade aos cuidadores. 
+Fatores como acidentes e limitações decorrentes da idade podem elevar o risco do uso indevido, esquecimento ou duplicação de doses de medicamentos. O objetivo do **Care Sync** é facilitar a rotina de pessoas que administram medicações diárias — em ambientes domésticos, asilos ou hospitais — garantindo maior segurança e autonomia aos pacientes e tranquilidade aos cuidadores. 
 
 A solução permite armazenar os remédios fora de suas embalagens originais sem comprometer sua integridade, controlando o tempo de permanência no dispensador (limite máximo de 7 dias). O aplicativo realiza o agendamento das doses, sincroniza a liberação de compartimentos mecânicos automatizados (ESP32), valida a retirada e o consumo por meio de um sensor de peso no recipiente de dispensação e de um sensor de detecção da ação do paciente (obs.: arquitetura de sensores sujeita a alterações conforme os testes de hardware), e dispara alertas instantâneos aos responsáveis em caso de não consumo, disponibilizando uma opção de ligação de emergência.
 
@@ -20,11 +20,11 @@ A solução permite armazenar os remédios fora de suas embalagens originais sem
 
 O banco de dados relacional é estruturado no PostgreSQL (hospedado no Supabase) e organiza o fluxo de informações da plataforma nos seguintes domínios principais:
 
-- *Controle de Acesso e Perfis*: Gerenciamento de contas de cuidadores responsáveis, pacientes assistidos e seus respectivos níveis de permissão.
-- *Hardware e Conectividade*: Registro dos dispensadores físicos (ESP32), mapeamento de compartimentos individuais, status de operação e vínculos com os pacientes.
-- *Estoque e Insumos*: Catálogo de medicamentos, controle de abastecimento por compartimento e rastreamento de validade/tempo de armazenamento.
-- *Prescrições e Auditoria*: Regras de posologia (intervalos e janelas de tolerância), cronograma de doses e histórico detalhado das dispensações confirmadas pelos sensores.
-- *Monitoramento e Notificações*: Logs de eventos do sistema e fila de alertas para atrasos de retirada, reposição de estoque, vencimento ou falhas de hardware.
+- **Controle de Acesso e Perfis**: Gerenciamento de contas de cuidadores responsáveis, pacientes assistidos e seus respectivos níveis de permissão.
+- **Hardware e Conectividade*: Registro dos dispensadores físicos (ESP32), mapeamento de compartimentos individuais, status de operação e vínculos com os pacientes.
+- **Estoque e Insumos**: Catálogo de medicamentos, controle de abastecimento por compartimento e rastreamento de validade/tempo de armazenamento.
+- **Prescrições e Auditoria**: Regras de posologia (intervalos e janelas de tolerância), cronograma de doses e histórico detalhado das dispensações confirmadas pelos sensores.
+- **Monitoramento e Notificações**: Logs de eventos do sistema e fila de alertas para atrasos de retirada, reposição de estoque, vencimento ou falhas de hardware.
 
 ---
 
@@ -43,19 +43,19 @@ O sistema permite o gerenciamento completo do ecossistema de medicação, contem
 
 ### Principais tecnologias previstas:
 
-*Front-end (Aplicação Web/Mobile - PWA):*
+**Front-end (Aplicação Web/Mobile - PWA):**
 - React
 - JSX
 - HTML5 e CSS3
 - JavaScript
 
-*Back-end, Banco de Dados e Integração IoT:*
+**Back-end, Banco de Dados e Integração IoT:**
 - C# / .NET Core (API Back-end)
 - PostgreSQL (Supabase)
 - MQTT (Comunicação com o microcontrolador ESP32)
 - C++ (Programação do microcontrolador ESP32)
 
-*Versionamento e Gestão:*
+**Versionamento e Gestão:**
 - Git e GitHub (Projects, Issues e Wiki)
 
 ---
@@ -74,10 +74,10 @@ O projeto está estruturado nos seguintes diretórios:
 
 ### Links e acompanhamento do projeto:
 
-- *Repositório GitHub:* https://github.com/S4naju/App-Controle-de-Medicamentos
-- *Documentação Técnica (Pasta /docs):* [docs/](docs/)
-- *Wiki (Documentação e Planejamento):* https://github.com/S4naju/App-Controle-de-Medicamentos/wiki
-- *Quadro Kanban (Gestão de Tarefas):* https://github.com/users/S4naju/projects/8/views/1
+- **Repositório GitHub:** https://github.com/S4naju/App-Controle-de-Medicamentos
+- **Documentação Técnica (Pasta /docs):** [docs/](docs/)
+- **Wiki (Documentação e Planejamento):** https://github.com/S4naju/App-Controle-de-Medicamentos/wiki
+- **Quadro Kanban (Gestão de Tarefas):** https://github.com/users/S4naju/projects/8/views/1
 
 ---
 
@@ -92,14 +92,14 @@ O desenvolvimento está sendo realizado de forma colaborativa pela equipe *Care 
 ### Integrantes da equipe (Care Sync Team):
 
 *Graduação:*
-- *Ana Julia Sampaio*
-- *Maycon Junior*
-- *Raimundo Guilherme*
+- Ana Julia Sampaio
+- Maycon Junior
+- Raimundo Guilherme
 
 *Ensino Técnico:*
-- *Hugo Lopes*
-- *Michel Campos*
-- *Murilo Ribeiro*
+- Hugo Lopes
+- Michel Campos
+- Murilo Ribeiro
 
-Disciplinas: *Engenharia de Software* e *Banco de Dados II*  
-Instituto Federal do Rio de Janeiro – *Campus Niterói*
+Disciplinas: **Engenharia de Software** e **Banco de Dados II** 
+Instituto Federal do Rio de Janeiro – **Campus Niterói**
