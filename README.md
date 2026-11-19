@@ -91,7 +91,7 @@ O desenvolvimento está sendo realizado de forma colaborativa pela equipe *Care 
 
 ### Integrantes da equipe (Care Sync Team):
 
-*Graduação (Engenharia de Computação):*
+*Graduação:*
 - *Ana Julia Sampaio*
 - *Maycon Junior*
 - *Raimundo Guilherme*
