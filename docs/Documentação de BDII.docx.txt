@@ -168,15 +168,35 @@ Tabela / FK
 Arquivo / caminho no GitHub
 	Finalidade
 	Instruções de execução (se necessário)
-	database/CareSync_SQL.sql 
-	Script DDL para criação das 13 tabelas no schema public com chaves primárias (UUID), chaves estrangeiras compostas, restrições UNIQUE / CHECK e índices.
-	Executar primeiro no SQL Editor do Supabase (ou cliente PostgreSQL) para criar toda a estrutura relacional. 
-	database/ criação de dados
-	Carga de dados DML populabilizando 20 registros válidos em cada uma das 13 tabelas (260 registros no total). 
-	Executar logo após o script DDL para popular a base e habilitar os testes transacionais e analíticos. 
-	database/ consultas e subconsultas
-	Conjunto das consultas SQL documentadas (5 simples/qualificadas, 3 junções com agregações/filtros e 4 subconsultas com IN, ALL, EXISTS e ANY). 
-	Executar no SQL Editor do Supabase para validar o retorno de cada consulta e subconsulta. 
+	database / Modelo_Logico.jpeg
+	Diagrama do Modelo Lógico relacional com as 13 entidades, atributos, chaves primárias/estrangeiras e cardinalidades. 
+	Apenas visualização (artefato documental; não requer execução no SGBD). 
+	database / Criacao_Tabelas.sql 
+	Script DDL de criação da estrutura base: 13 tabelas, chaves primárias/compostas, restrições CHECK/UNIQUE e índices. 
+	1º passo: Executar integralmente no SQL Editor do Supabase/PostgreSQL antes de qualquer outro script. 
+	database / Perfis_Previlegios.sql
+	Criação do papel caresync_dispositivo, definição de privilégios (GRANT/REVOKE) e políticas iniciais de RLS por perfil (anon, authenticated e dispositivo). 
+	2º passo: Executar após Criacao_Tabelas.sql para configurar as permissões de acesso. 
+	database / Politicas_Seguraca.sql
+	Implementação das funções SECURITY DEFINER, regras avançadas de compartilhamento de dispositivo, proteção de credenciais e triggers de titularidade. 
+	3º passo: Executar após Perfis_Previlegios.sql para aplicar a camada completa de segurança e integridade. 
+	database / Insercao_Dados.sql
+	Carga inicial (seed) com 20 registros fictícios em auth.users e nas 13 tabelas do schema public para testes. 
+	4º passo: Executar integralmente em ambiente de desenvolvimento/testes após a criação da estrutura. 
+	database / Regras_Negocio.sql
+	Implementação procedural das 3 Functions, 3 Triggers e 3 Stored Procedures referentes às regras de negócio (RN01, RN02 e RN03). 
+	5º passo: Executar integralmente no SQL Editor após a carga de dados para registrar as rotinas no banco. 
+	database / Consultas_subconsultas.sql
+
+
+	Conjunto de consultas DQL (simples, JOIN/GROUP BY/HAVING e subconsultas com IN, ALL, EXISTS e ANY) para extração de relatórios. 
+	Execução opcional: Selecionar e executar cada consulta individualmente para visualizar os relatórios. 
+	database / Teste_acesso.sql
+	Roteiro de testes de segurança (T01 a T13) validando isolamento RLS e permissões entre cuidador, visitante (anon) e dispositivo (caresync_dispositivo) 
+	Execução opcional: Executar bloco por bloco (BEGIN ... ROLLBACK); os testes de bloqueio retornam erros de permissão esperados. 
+	database / Evidencias_Testes.sql
+	Roteiro de validação funcional das Functions, Procedures e Triggers da APD2 utilizando os UUIDs determinísticos da carga inicial. 
+	Execução opcional: Selecionar e executar um comando por vez; os últimos testes (UPDATE/DELETE) geram exceções esperadas da RN03. 
 	2.6 Consultas e subconsultas implementadas
 ID / tipo
 	Objetivo e resultado esperado
