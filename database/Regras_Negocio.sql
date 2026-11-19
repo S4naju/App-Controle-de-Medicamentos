@@ -31,6 +31,7 @@ END;
 $$;
 
 -- 2. calcula a taxa de adesão do paciente em porcentagem
+-- ou seja, calcula a quantidade de vezes que o paciente tomou/retirou o seu remédio no prazo 
 CREATE OR REPLACE FUNCTION public.fn_calcular_taxa_adesao(
     p_id_paciente uuid,
     p_dias integer DEFAULT 30
