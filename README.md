@@ -11,6 +11,7 @@ Este projeto foi desenvolvido de forma integrada para as disciplinas de *Engenha
 
 ### Objetivo da solução proposta:
 Fatores como acidentes e limitações decorrentes da idade podem elevar o risco do uso indevido, esquecimento ou duplicação de doses de medicamentos. O objetivo do *Care Sync* é facilitar a rotina de pessoas que administram medicações diárias — em ambientes domésticos, asilos ou hospitais — garantindo maior segurança e autonomia aos pacientes e tranquilidade aos cuidadores. 
+
 A solução permite armazenar os remédios fora de suas embalagens originais sem comprometer sua integridade, controlando o tempo de permanência no dispensador (limite máximo de 7 dias). O aplicativo realiza o agendamento das doses, sincroniza a liberação de compartimentos mecânicos automatizados (ESP32), valida a retirada e o consumo por meio de um sensor de peso no recipiente de dispensação e de um sensor de detecção da ação do paciente (obs.: arquitetura de sensores sujeita a alterações conforme os testes de hardware), e dispara alertas instantâneos aos responsáveis em caso de não consumo, disponibilizando uma opção de ligação de emergência.
 
 ---
